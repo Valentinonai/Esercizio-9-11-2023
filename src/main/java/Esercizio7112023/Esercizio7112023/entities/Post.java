@@ -8,19 +8,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-public record Post (
-        @NotEmpty(message = "Stringa vuota non ammessa")
-         String categoria,
-        @NotEmpty(message = "Stringa vuota non ammessa")
-         String titolo,
-        @NotEmpty(message = "Stringa vuota non ammessa")
-         String cover,
-        @NotEmpty(message = "Stringa vuota non ammessa")
-         String contenuto,
-         @Min(value = 1,message = "Tempo di lettura minimo 1 minuto")
-         int tempoDiLettura,
-         int autore_id
-){
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
+public class Post{
+    @NotEmpty(message = "Stringa vuota non ammessa per categoria")
+    private String categoria;
+    @NotEmpty(message = "Stringa vuota non ammessa per titolo")
+    private String titolo;
+    @NotEmpty(message = "Stringa vuota non ammessa per contenuto")
+    private String contenuto;
+    @Min(value = 1,message = "Tempo di letturavalore minimo 1 minuto")
+    private int tempoDiLettura;
+    @Min(value = 1,message = "Seleziona id utente")
+    private int autore_id;
 }

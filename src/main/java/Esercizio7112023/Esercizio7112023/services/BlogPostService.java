@@ -38,8 +38,7 @@ private AutoreRepository autoreRepository;
 
     public BlogPost saveNewPost(Post p){
         Autore a=autoreRepository.findById(p.getAutore_id()).orElseThrow(()->new NotFoundException("Autore inesistente"));
-        p.setCover("https://picsum.photos/200/300");
-        BlogPost app= BlogPost.builder().categoria(p.getCategoria()).Titolo(p.getTitolo()).contenuto(p.getContenuto()).tempoDiLettura(p.getTempoDiLettura()).autore(a).cover(p.getCover()).build();
+        BlogPost app= BlogPost.builder().categoria(p.getCategoria()).Titolo(p.getTitolo()).contenuto(p.getContenuto()).tempoDiLettura(p.getTempoDiLettura()).autore(a).cover("https://picsum.photos/200/300").build();
         return blogPostRepository.save(app);
 
     }
