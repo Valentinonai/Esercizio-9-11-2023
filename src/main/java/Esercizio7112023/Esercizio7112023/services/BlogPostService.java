@@ -9,8 +9,8 @@ import Esercizio7112023.Esercizio7112023.repositories.AutoreRepository;
 import Esercizio7112023.Esercizio7112023.repositories.BlogPostRepository;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @Service
 public class BlogPostService {
@@ -30,6 +29,11 @@ private BlogPostRepository blogPostRepository;
 private AutoreRepository autoreRepository;
 @Autowired
 private Cloudinary cloudinary;
+@Autowired
+EmailService emailService;
+
+    @Value("${spring.mail.receiver}")
+    private String email;
 
     public Page<BlogPost> getAllBlogPosts(int page,int size,String orderby){
         Pageable p= PageRequest.of(page,size, Sort.by(orderby));
@@ -44,7 +48,9 @@ private Cloudinary cloudinary;
     public BlogPost saveNewPost(Post p){
         Autore a=autoreRepository.findById(p.getAutore_id()).orElseThrow(()->new NotFoundException("Autore inesistente"));
         BlogPost app= BlogPost.builder().categoria(p.getCategoria()).Titolo(p.getTitolo()).contenuto(p.getContenuto()).tempoDiLettura(p.getTempoDiLettura()).autore(a).cover("https://picsum.photos/200/300").build();
-        return blogPostRepository.save(app);
+       BlogPost b= blogPostRepository.save(app);
+        emailService.sendEmail(email,"BlogPost Creato"," BlogPost "+b.getId()+" creato con successo");
+        return b;
 
     }
 

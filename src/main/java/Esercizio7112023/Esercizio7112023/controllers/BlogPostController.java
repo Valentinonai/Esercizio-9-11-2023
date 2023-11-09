@@ -6,6 +6,7 @@ import Esercizio7112023.Esercizio7112023.exceptions.BadRequest;
 import Esercizio7112023.Esercizio7112023.services.BlogPostService;
 import Esercizio7112023.Esercizio7112023.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -41,7 +42,7 @@ public class BlogPostController {
         }
         else{
 
-emailService.sendEmail("trademon46@gmail.com","BlogPost Creato"," BlogPost creato con successo");
+
             return blogPostService.saveNewPost(p);}
 
     }
