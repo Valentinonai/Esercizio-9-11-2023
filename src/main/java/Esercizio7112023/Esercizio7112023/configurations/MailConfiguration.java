@@ -18,9 +18,6 @@ public class MailConfiguration {
         mailSender.setUsername(name);
         mailSender.setPassword(password);
         mailSender.setProtocol("smtp");
-
-
-
         return mailSender;
     }
 }
