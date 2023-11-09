@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -48,5 +49,11 @@ public class BlogPostController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSingleBlogPost(@PathVariable int id) throws IOException {
         blogPostService.deleteSingleBlogPost(id);
+    }
+
+    @PostMapping("/uploadimage/{id}")
+    public String uploadImage(@RequestParam ("immagine")MultipartFile body,@PathVariable int id) throws IOException {
+        System.err.println(body.getName());
+        return  blogPostService.upload(body,id);
     }
 }

@@ -7,6 +7,8 @@ import Esercizio7112023.Esercizio7112023.entities.Post;
 import Esercizio7112023.Esercizio7112023.exceptions.NotFoundException;
 import Esercizio7112023.Esercizio7112023.repositories.AutoreRepository;
 import Esercizio7112023.Esercizio7112023.repositories.BlogPostRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +28,8 @@ public class BlogPostService {
 private BlogPostRepository blogPostRepository;
 @Autowired
 private AutoreRepository autoreRepository;
+@Autowired
+private Cloudinary cloudinary;
 
     public Page<BlogPost> getAllBlogPosts(int page,int size,String orderby){
         Pageable p= PageRequest.of(page,size, Sort.by(orderby));
@@ -55,6 +60,14 @@ private AutoreRepository autoreRepository;
     public void deleteSingleBlogPost(int id) throws IOException {
        BlogPost current=this.getSingleBlogPost(id);
         blogPostRepository.delete(current);
+    }
+
+    public String upload(MultipartFile file,int id) throws IOException {
+        BlogPost b=this.getSingleBlogPost(id);
+        String url=(String)cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        b.setCover(url);
+        blogPostRepository.save(b);
+        return "Upload immagine cover eseguito";
     }
 }
 
