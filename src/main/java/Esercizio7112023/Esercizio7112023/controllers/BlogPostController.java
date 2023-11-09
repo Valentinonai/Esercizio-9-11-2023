@@ -2,10 +2,13 @@ package Esercizio7112023.Esercizio7112023.controllers;
 
 import Esercizio7112023.Esercizio7112023.entities.BlogPost;
 import Esercizio7112023.Esercizio7112023.entities.Post;
+import Esercizio7112023.Esercizio7112023.exceptions.BadRequest;
 import Esercizio7112023.Esercizio7112023.services.BlogPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -27,8 +30,13 @@ public class BlogPostController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public BlogPost saveNewPost(@RequestBody Post p) throws IOException {
-        return blogPostService.saveNewPost(p);
+    public BlogPost saveNewPost(@RequestBody @Validated Post p, BindingResult validation) throws IOException {
+        if(validation.hasErrors())
+        {
+            throw new BadRequest(validation.getAllErrors());
+        }
+        else{return blogPostService.saveNewPost(p);}
+
     }
 
     @PutMapping("/{id}")
