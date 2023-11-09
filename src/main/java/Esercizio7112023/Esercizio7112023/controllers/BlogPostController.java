@@ -4,6 +4,7 @@ import Esercizio7112023.Esercizio7112023.entities.BlogPost;
 import Esercizio7112023.Esercizio7112023.entities.Post;
 import Esercizio7112023.Esercizio7112023.exceptions.BadRequest;
 import Esercizio7112023.Esercizio7112023.services.BlogPostService;
+import Esercizio7112023.Esercizio7112023.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,8 @@ import java.util.List;
 public class BlogPostController {
     @Autowired
     BlogPostService blogPostService;
+    @Autowired
+    EmailService emailService;
     @GetMapping()
     public Page<BlogPost> getAllBlogPosts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int size, @RequestParam(defaultValue = "id")String orderby){
         return blogPostService.getAllBlogPosts(page,size>20?10:size,orderby);
@@ -36,7 +39,10 @@ public class BlogPostController {
         {
             throw new BadRequest(validation.getAllErrors());
         }
-        else{return blogPostService.saveNewPost(p);}
+        else{
+
+emailService.sendEmail("trademon46@gmail.com","BlogPost Creato"," BlogPost creato con successo");
+            return blogPostService.saveNewPost(p);}
 
     }
 
@@ -53,7 +59,6 @@ public class BlogPostController {
 
     @PostMapping("/uploadimage/{id}")
     public String uploadImage(@RequestParam ("immagine")MultipartFile body,@PathVariable int id) throws IOException {
-        System.err.println(body.getName());
         return  blogPostService.upload(body,id);
     }
 }
